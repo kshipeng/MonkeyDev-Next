@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Ancestors</key>
+	<array>
+		<string>com.apple.dt.unit.languageChoice</string>
+		<string>com.apple.dt.unit.frameworkBase</string>
+		<string>com.apple.dt.unit.iosBase</string>
+	</array>
+	<key>AssociatedTargetSpecification</key>
+	<dict>
+		<key>AllowablePlatforms</key>
+		<array>
+			<string>com.apple.platform.iphoneos</string>
+		</array>
+		<key>AllowableProductTypes</key>
+		<array>
+			<string>com.apple.product-type.application</string>
+			<string>com.apple.product-type.application.messages</string>
+		</array>
+		<key>AssociatedTargetIsDependent</key>
+		<true/>
+		<key>AssociatedTargetNeedsProductBuildPhaseInjection</key>
+		<true/>
+		<key>PopUpDescription</key>
+		<string>The application target that will host this new framework. The application will be set up to link to and embed the new framework.</string>
+		<key>PopUpTitle</key>
+		<string>Embed in Application:</string>
+	</dict>
+	<key>Concrete</key>
+	<true/>
+	<key>Definitions</key>
+	<dict>
+		<key>___PACKAGENAMEASIDENTIFIER___.m</key>
+		<dict>
+			<key>Path</key>
+			<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+		</dict>
+		<key>___PACKAGENAMEASIDENTIFIER___.podspec</key>
+		<dict>
+			<key>Path</key>
+			<string>___PACKAGENAMEASIDENTIFIER___.podspec</string>
+		</dict>
+		<key>___TARGETNAME:c99ExtIdentifier___.h</key>
+		<dict>
+			<key>BuildAttributes</key>
+			<array>
+				<string>Public</string>
+			</array>
+			<key>TargetIdentifiers</key>
+			<array>
+				<string>com.apple.dt.cocoaTouchLibraryOrFrameworkTarget</string>
+			</array>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>This template creates a framework that uses UIKit.</string>
+	<key>Identifier</key>
+	<string>com.monkey.monkeydev.cocoaTouchFramework</string>
+	<key>Kind</key>
+	<string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
+	<key>Nodes</key>
+	<array>
+		<string>___PACKAGENAMEASIDENTIFIER___.m</string>
+		<string>___PACKAGENAMEASIDENTIFIER___.podspec</string>
+	</array>
+	<key>Options</key>
+	<array>
+		<dict>
+			<key>Default</key>
+			<string>true</string>
+			<key>Identifier</key>
+			<string>hasUnitTests</string>
+			<key>Name</key>
+			<string>Include Unit Tests</string>
+			<key>NotPersisted</key>
+			<false/>
+			<key>SortOrder</key>
+			<integer>100</integer>
+			<key>Type</key>
+			<string>checkbox</string>
+			<key>Units</key>
+			<dict>
+				<key>true</key>
+				<dict>
+					<key>Components</key>
+					<array>
+						<dict>
+							<key>Identifier</key>
+							<string>com.apple.dt.unit.cocoaTouchFrameworkUnitTestBundle</string>
+							<key>Name</key>
+							<string>___PACKAGENAME___Tests</string>
+						</dict>
+					</array>
+				</dict>
+			</dict>
+		</dict>
+	</array>
+	<key>Project</key>
+	<dict>
+		<key>SharedSettings</key>
+		<dict>
+			<key>HEADER_SEARCH_PATHS</key>
+			<string>$(inherited) $(MonkeyDevPath)/include</string>
+			<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+			<string>8.0</string>
+			<key>MonkeyDevPath</key>
+			<string>$(HOME)/.MonkeyDev</string>
+		</dict>
+	</dict>
+	<key>SortOrder</key>
+	<integer>1</integer>
+	<key>Targets</key>
+	<array>
+		<dict>
+			<key>SharedSettings</key>
+			<dict>
+				<key>LD_RUNPATH_SEARCH_PATHS</key>
+				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
+			</dict>
+			<key>TargetIdentifier</key>
+			<string>com.apple.dt.cocoaTouchLibraryOrFrameworkTarget</string>
+		</dict>
+	</array>
+</dict>
+</plist>

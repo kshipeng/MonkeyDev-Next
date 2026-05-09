@@ -215,7 +215,7 @@ typedef NS_ENUM(NSUInteger, MDTraceSource) {
 
 - (void)setFlag:(MDTraceFlag)flag
 {
-    NSAssert(flag >= MDTraceModeOff && flag <= MDTraceFlagMask, @"invalid TraceFlag");
+    NSAssert((NSInteger)flag >= (NSInteger)MDTraceModeOff && (NSInteger)flag <= (NSInteger)MDTraceFlagMask, @"invalid TraceFlag");
     _flag = flag;
 }
 

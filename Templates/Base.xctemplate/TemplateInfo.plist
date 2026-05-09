@@ -21,7 +21,6 @@
 //  ___PACKAGENAME___
 //
 //  Created by ___FULLUSERNAME___ on ___DATE___.
-//  Copyright (c) ___YEAR___ ___ORGANIZATIONNAME___. All rights reserved.
 //
 </string>
 		<key>*:import:*</key>
@@ -137,6 +136,8 @@
 		<string>iphoneos</string>
 		<key>SharedSettings</key>
 		<dict>
+			<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+			<false/>
 			<key>EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES</key>
 			<string>*.nib *.lproj *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj</string>
 			<key>FRAMEWORK_SEARCH_PATHS</key>
@@ -172,6 +173,8 @@
 			<string>___PACKAGENAME___</string>
 			<key>SharedSettings</key>
 			<dict>
+				<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+				<false/>
 				<key>CODE_SIGN_IDENTITY</key>
 				<string></string>
 				<key>MonkeyDevClearUiCacheOnInstall</key>

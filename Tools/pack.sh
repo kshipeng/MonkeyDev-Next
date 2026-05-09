@@ -27,6 +27,8 @@ FRAMEWORKS_TO_INJECT_PATH="${MONKEYDEV_PATH}/Frameworks/"
 # target app placed
 TARGET_APP_PUT_PATH="${SRCROOT}/${TARGET_NAME}/TargetApp"
 
+ORIGINAL_DYLIB_NAME="lib${TARGET_NAME}Dylib.dylib"
+
 # Compatiable old version
 MONKEYDEV_INSERT_DYLIB=${MONKEYDEV_INSERT_DYLIB:=YES}
 MONKEYDEV_TARGET_APP=${MONKEYDEV_TARGET_APP:=Optional}
@@ -39,7 +41,7 @@ if [[ -n "${MONKEYDEV_DYLIB_NAME}" ]]; then
     FULL_DYLIB_NAME="${MONKEYDEV_DYLIB_NAME}"
 else
     # 默认逻辑：完全沿用原有拼接规则
-    FULL_DYLIB_NAME="lib${TARGET_NAME}Dylib.dylib"
+    FULL_DYLIB_NAME="${ORIGINAL_DYLIB_NAME}"
 fi
 
 function isRelease() {
@@ -205,10 +207,11 @@ function pack(){
 	fi
 
 	if [[ ${MONKEYDEV_INSERT_DYLIB} == "YES" ]];then
+        rm -f "${TARGET_APP_FRAMEWORKS_PATH}/${ORIGINAL_DYLIB_NAME}"
+        rm -f "${TARGET_APP_FRAMEWORKS_PATH}/${FULL_DYLIB_NAME}"
         cp -rf "${FRAMEWORKS_TO_INJECT_PATH}" "${TARGET_APP_FRAMEWORKS_PATH}"
         rm -rf "${TARGET_APP_FRAMEWORKS_PATH}"/.keep
-        ORIGINAL_BUILD_NAME="lib${TARGET_NAME}Dylib.dylib"
-		cp -rf "${BUILT_PRODUCTS_DIR}/${ORIGINAL_BUILD_NAME}" "${TARGET_APP_FRAMEWORKS_PATH}/${FULL_DYLIB_NAME}"
+		cp -rf "${BUILT_PRODUCTS_DIR}/${ORIGINAL_DYLIB_NAME}" "${TARGET_APP_FRAMEWORKS_PATH}/${FULL_DYLIB_NAME}"
 		if [[ ${MONKEYDEV_ADD_SUBSTRATE} != "YES" ]];then
 			rm -rf "${TARGET_APP_FRAMEWORKS_PATH}/libsubstrate.dylib"
 		fi

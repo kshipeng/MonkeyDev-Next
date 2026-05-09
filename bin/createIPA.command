@@ -26,7 +26,7 @@ echo "==================MonkeyDev(create ipa file...)=================="
 run "rm -rf ${DIR}/Target.ipa ${DIR}/Payload"
 run "mkdir ${DIR}/Payload"
 
-APP=$(find ${DIR} -type d | grep ".app$" | head -n 1)
+APP=$(find -L ${DIR} -type d | grep ".app$" | head -n 1)
 
 run "cp -rf ${APP} ${DIR}/Payload"
 run_at ${DIR} "zip -qr Target.ipa Payload"

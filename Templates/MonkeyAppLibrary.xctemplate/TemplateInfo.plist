@@ -464,10 +464,6 @@
 					<key>Class</key>
 					<string>Frameworks</string>
 				</dict>
-				<dict>
-					<key>Class</key>
-					<string>Headers</string>
-				</dict>
 			</array>
 			<key>Frameworks</key>
 			<array/>

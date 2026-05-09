@@ -1,7 +1,7 @@
 MONKEYDEV_PATH="${MonkeyDevPath:-$HOME/.MonkeyDev}"
 
 # temp path
-TEMP_PATH="${SRCROOT}/${TARGET_NAME}/tmp"
+TEMP_PATH="${BUILT_PRODUCTS_DIR}/MonkeyDevTemp"
 
 # monkeyparser
 MONKEYPARSER="${MONKEYDEV_PATH}/bin/monkeyparser"

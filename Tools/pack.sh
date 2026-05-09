@@ -207,7 +207,8 @@ function pack(){
 	if [[ ${MONKEYDEV_INSERT_DYLIB} == "YES" ]];then
         cp -rf "${FRAMEWORKS_TO_INJECT_PATH}" "${TARGET_APP_FRAMEWORKS_PATH}"
         rm -rf "${TARGET_APP_FRAMEWORKS_PATH}"/.keep
-		cp -rf "${BUILT_PRODUCTS_DIR}/${FULL_DYLIB_NAME}" "${TARGET_APP_FRAMEWORKS_PATH}"
+        ORIGINAL_BUILD_NAME="lib${TARGET_NAME}Dylib.dylib"
+		cp -rf "${BUILT_PRODUCTS_DIR}/${ORIGINAL_BUILD_NAME}" "${TARGET_APP_FRAMEWORKS_PATH}/${FULL_DYLIB_NAME}"
 		if [[ ${MONKEYDEV_ADD_SUBSTRATE} != "YES" ]];then
 			rm -rf "${TARGET_APP_FRAMEWORKS_PATH}/libsubstrate.dylib"
 		fi

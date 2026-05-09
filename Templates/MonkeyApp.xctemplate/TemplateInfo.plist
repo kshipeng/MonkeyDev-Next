@@ -58,6 +58,8 @@
 		</dict>
 		<key>TargetApp/put ipa or app here</key>
 		<dict>
+			<key>Path</key>
+			<string>TargetApp/put ipa or app here</string>
 			<key>Group</key>
 			<array>
 				<string>TargetApp</string>
@@ -125,6 +127,8 @@
 	<dict>
 		<key>SharedSettings</key>
 		<dict>
+			<key>ENABLE_USER_SCRIPT_SANDBOXING</key>
+			<string>NO</string>
 			<key>MonkeyDevTheosPath</key>
 			<string>$(HOME)/.MonkeyDev/theos</string>
 			<key>MonkeyDevPath</key>

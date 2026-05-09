@@ -265,7 +265,7 @@ static BOOL omt_isUnionType(const char *argumentType)
     return ([typeString hasPrefix:@"("] && [typeString hasSuffix:@")"]);
 }
 
-static NSString *omt_unionName(const char *argumentType)
+static NSString * __attribute__((unused)) omt_unionName(const char *argumentType)
 {
     NSString *typeString = [NSString stringWithUTF8String:argumentType];
     NSUInteger start = [typeString rangeOfString:@"("].location;

@@ -75,7 +75,7 @@ function checkApp(){
 
     # 1. 独立接管 Class Dump
     if [[ "${MONKEYDEV_CLASS_DUMP}" == "YES" ]]; then
-        DUMP_DIR="${SRCROOT}/${TARGET_NAME}/Headers"
+        DUMP_DIR="${SRCROOT}/DumpHeaders"
         rm -rf "${DUMP_DIR}"
         mkdir -p "${DUMP_DIR}"
         if [[ -f "${CLASS_DUMP}" ]]; then

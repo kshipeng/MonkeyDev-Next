@@ -15,7 +15,7 @@
 MonkeyDev-Next 的核心编译逻辑与原版保持高度兼容，完整的项目结构说明与开发教程，请直接查阅原版 Wiki：
 🔗 [MonkeyDev Official Wiki](https://github.com/AloneMonkey/MonkeyDev/wiki)
 
-⚠️ Xcode 26 会自动将添加进工程目录中的文件纳入 Copy Bundle Resources，因此在TargetApp目录添加App或ipa后，回到Xcode取消对应的Target Membership，否则包体积会倍数增大。
+⚠️ Xcode 26 会自动将添加进工程目录中的文件纳入 Copy Bundle Resources，因此在 TargetApp 目录添加 App 或 ipa 后，回到 Xcode 取消对应的 Target Membership，否则包体积会倍数增大。
 
 ## 🛠 生命周期管理 (Lifecycle Management)
 

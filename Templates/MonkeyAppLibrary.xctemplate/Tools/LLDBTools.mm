@@ -108,10 +108,47 @@ NSString* pactions(vm_address_t address){
     return result;
 }
 
+static NSString* _format_signature_string(const char *signature) {
+    if (!signature || strlen(signature) == 0) return @"(null)";
+    
+    NSMethodSignature *sig = nil;
+    @try {
+        sig = [NSMethodSignature signatureWithObjCTypes:signature];
+    } @catch (NSException *exception) {
+        return [NSString stringWithUTF8String:signature];
+    }
+    
+    if (!sig) return [NSString stringWithUTF8String:signature];
+    
+    NSMutableArray *types = [NSMutableArray array];
+    [types addObject:[NSString stringWithUTF8String:(char *)[sig methodReturnType]]];
+    
+    for (NSUInteger i = 0; i < sig.numberOfArguments; i++) {
+        [types addObject:[NSString stringWithUTF8String:(char *)[sig getArgumentTypeAtIndex:i]]];
+    }
+    
+    NSMutableString *formattedSig = [NSMutableString stringWithFormat:@"%@ ^(", decode(types[0])];
+    
+    /**
+     * 跳过隐式参数
+     * types[0]: 返回值
+     * types[1]: 隐式参数 @? (Block 自身) -> 忽略输出
+     * types[2] 及以后: 开发者定义的显式参数
+     */
+    for (NSUInteger i = 2; i < types.count; i++) {
+        [formattedSig appendString:decode(types[i])];
+        if (i < types.count - 1) {
+            [formattedSig appendString:@", "];
+        }
+    }
+    
+    [formattedSig appendString:@")"];
+    return formattedSig;
+}
+
 NSString* pblock(vm_address_t address){
     struct Block_literal_1 real = *((struct Block_literal_1 *)(void*)address);
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:[NSNumber numberWithLong:(long)real.invoke] forKey:@"invoke"];
+    
     if (real.flags & BLOCK_HAS_SIGNATURE) {
         char *signature;
         if (real.flags & BLOCK_HAS_COPY_DISPOSE) {
@@ -120,35 +157,37 @@ NSString* pblock(vm_address_t address){
             signature = (char *)(real.descriptor)->copy_helper;
         }
         
-        NSMethodSignature *sig = [NSMethodSignature signatureWithObjCTypes:signature];
-        NSMutableArray *types = [NSMutableArray array];
-        
-        [types addObject:[NSString stringWithUTF8String:(char *)[sig methodReturnType]]];
-        
-        for (NSUInteger i = 0; i < sig.numberOfArguments; i++) {
-            char *type = (char *)[sig getArgumentTypeAtIndex:i];
-            [types addObject:[NSString stringWithUTF8String:type]];
-        }
-        
-        [dict setObject:types forKey:@"signature"];
+        return [NSString stringWithFormat:@"Imp: 0x%lx    Signature: %@", (long)real.invoke, _format_signature_string(signature)];
     }
     
-    NSMutableArray* sigArr = dict[@"signature"];
-    
-    if(!sigArr){
-        return [NSString stringWithFormat:@"Imp: 0x%lx", [dict[@"invoke"] longValue]];
-    }else{
-        NSMutableString* sig = [NSMutableString stringWithFormat:@"%@ ^(", decode(sigArr[0])];
-        for (int i = 2; i < sigArr.count; i++) {
-            if(i == sigArr.count - 1){
-                [sig appendFormat:@"%@", decode(sigArr[i])];
-            }else{
-                [sig appendFormat:@"%@ ,", decode(sigArr[i])];
-            }
-        }
-        [sig appendString:@");"];
-        return [NSString stringWithFormat:@"Imp: 0x%lx    Signature: %s", [dict[@"invoke"] longValue], [sig UTF8String]];
+    return [NSString stringWithFormat:@"Imp: 0x%lx", (long)real.invoke];
+}
+
+NSString* pblock_signature(id block_obj) {
+    if (!block_obj) {
+        return @"(null)";
     }
+    
+    struct Block_literal_1 *blockRef = (__bridge struct Block_literal_1 *)block_obj;
+    
+    if (!(blockRef->flags & BLOCK_HAS_SIGNATURE)) {
+        return @"[Error] 当前 Block 未携带 BLOCK_HAS_SIGNATURE 标识";
+    }
+    
+    uint8_t *descPtr = (uint8_t *)blockRef->descriptor;
+    descPtr += sizeof(unsigned long int) * 2;
+    
+    if (blockRef->flags & BLOCK_HAS_COPY_DISPOSE) {
+        descPtr += sizeof(void *) * 2;
+    }
+    
+    const char *signatureObjc = (*(const char **)descPtr);
+    
+    if (!signatureObjc || strlen(signatureObjc) == 0) {
+        return @"[Error] 签名指针读取为空或长度为 0";
+    }
+    
+    return _format_signature_string(signatureObjc);
 }
 
 struct CYChoice {

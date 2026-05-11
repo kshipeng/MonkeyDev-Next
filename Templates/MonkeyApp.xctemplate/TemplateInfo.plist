@@ -154,16 +154,6 @@
 				</dict>
 				<dict>
 					<key>Class</key>
-					<string>ShellScript</string>
-					<key>RunOnlyForDeploymentPostprocessing</key>
-					<false/>
-					<key>ShellPath</key>
-					<string>/bin/sh</string>
-					<key>ShellScript</key>
-					<string>&quot;${MonkeyDevPath}/Tools/pack.sh&quot;</string>
-				</dict>
-				<dict>
-					<key>Class</key>
 					<string>Resources</string>
 				</dict>
 				<dict>
@@ -174,7 +164,7 @@
 					<key>ShellPath</key>
 					<string>/bin/sh</string>
 					<key>ShellScript</key>
-					<string>&quot;${MonkeyDevPath}/Tools/pack.sh&quot; codesign</string>
+					<string>&quot;${MonkeyDevPath}/Tools/pack.sh&quot; all # 保持该脚本在最后阶段执行</string>
 				</dict>
 			</array>
 			<key>ProductType</key>

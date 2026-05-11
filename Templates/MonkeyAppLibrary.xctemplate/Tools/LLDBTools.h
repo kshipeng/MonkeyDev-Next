@@ -13,6 +13,10 @@
 
 //(lldb) po pviews()
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NSString* pvc(void);
 
 NSString* pviews(void);
@@ -27,4 +31,10 @@ NSString* ivars(vm_address_t address);
 
 NSString* choose(const char* classname);
 
-NSString* vmmap();
+NSString* vmmap(void);
+
+NSString* pblock_signature(id block_obj);
+
+#ifdef __cplusplus
+}
+#endif

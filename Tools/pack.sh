@@ -206,6 +206,9 @@ function pack(){
 		mkdir -p "${TARGET_APP_FRAMEWORKS_PATH}"
 	fi
 
+    ORIGINAL_FRAMEWORKS_SNAPSHOT="${TEMP_PATH}/original_frameworks_snapshot.txt"
+    ls -1 "${COPY_APP_PATH}/Frameworks/" > "${ORIGINAL_FRAMEWORKS_SNAPSHOT}" 2>/dev/null || true
+
 	if [[ ${MONKEYDEV_INSERT_DYLIB} == "YES" ]];then
         rm -f "${TARGET_APP_FRAMEWORKS_PATH}/${ORIGINAL_DYLIB_NAME}"
         rm -f "${TARGET_APP_FRAMEWORKS_PATH}/${FULL_DYLIB_NAME}"
@@ -285,6 +288,48 @@ function pack(){
 	if [[ -f "${SRCROOT}/../Pods/Target Support Files/Pods-""${TARGET_NAME}""Dylib/Pods-""${TARGET_NAME}""Dylib-resources.sh" ]]; then
 		source "${SRCROOT}/../Pods/Target Support Files/Pods-""${TARGET_NAME}""Dylib/Pods-""${TARGET_NAME}""Dylib-resources.sh"
 	fi
+ 
+    if [[ -d "${TARGET_APP_FRAMEWORKS_PATH}" ]]; then
+        find "${TARGET_APP_FRAMEWORKS_PATH}" -type f | while read -r lib_file; do
+            
+            local relative_path="${lib_file#${TARGET_APP_FRAMEWORKS_PATH}}"
+            relative_path="${relative_path#/}"
+            local top_level_item="${relative_path%%/*}"
+
+            if grep -qx "${top_level_item}" "${ORIGINAL_FRAMEWORKS_SNAPSHOT}" 2>/dev/null; then
+                continue
+            fi
+
+            if file "$lib_file" | grep -q "Mach-O"; then
+                local lib_name=$(basename "$lib_file")
+                
+                if [[ "$lib_name" != "${FULL_DYLIB_NAME}" ]] && [[ "$lib_name" != "libsubstrate.dylib" ]]; then
+                    local standard_install_path="@executable_path/Frameworks/$lib_name"
+                    install_name_tool -id "$standard_install_path" "$lib_file" 2>/dev/null
+                fi
+                
+                local deps=$(otool -L "$lib_file" 2>/dev/null | awk 'NR>1 {print $1}')
+                for dep_path in $deps; do
+                    local dep_name=$(basename "$dep_path")
+                    
+                    if [[ -f "${TARGET_APP_FRAMEWORKS_PATH}/$dep_name" ]]; then
+                        local new_dep_path="@executable_path/Frameworks/$dep_name"
+                        if [[ "$dep_path" != "$new_dep_path" ]]; then
+                            install_name_tool -change "$dep_path" "$new_dep_path" "$lib_file" 2>/dev/null
+                        fi
+                        continue
+                    fi
+                    
+                    if [[ "$dep_path" == /System/Library/* ]] || [[ "$dep_path" == /usr/lib/* ]] || [[ "$dep_path" == @rpath/* ]] || [[ "$dep_path" == @executable_path/* ]]; then
+                        continue
+                    fi
+                    
+                    local new_dep_path="@executable_path/Frameworks/$dep_name"
+                    install_name_tool -change "$dep_path" "$new_dep_path" "$lib_file" 2>/dev/null
+                done
+            fi
+        done
+    fi
 }
 
 function build_custom_ipa() {
@@ -344,12 +389,14 @@ function build_custom_ipa() {
     fi
 }
 
-if [[ "$1" == "codesign" ]]; then
-
+function perform_codesign() {
+    echo "🔒 开始执行重签名与封包流程..."
+    
     if [[ ${MONKEYDEV_INSERT_DYLIB} == "NO" ]];then
         rm -rf "${BUILD_APP_PATH}/Frameworks/${FULL_DYLIB_NAME}"
     fi
-    ${MONKEYPARSER} codesign -i "${EXPANDED_CODE_SIGN_IDENTITY}" -t "${BUILD_APP_PATH}"
+    
+    "${MONKEYPARSER}" codesign -i "${EXPANDED_CODE_SIGN_IDENTITY}" -t "${BUILD_APP_PATH}"
 
     ENT_FILE="${TEMP_PATH}/extracted_entitlements.plist"
     /usr/bin/codesign -d --entitlements :- "${BUILD_APP_PATH}" > "${ENT_FILE}" 2>/dev/null || true
@@ -365,7 +412,15 @@ if [[ "$1" == "codesign" ]]; then
     fi
     
     build_custom_ipa
-    
+}
+
+if [[ "$1" == "codesign" ]]; then
+    perform_codesign
+elif [[ "$1" == "pack" ]]; then
+    pack
+elif [[ "$1" == "all" ]]; then
+    pack
+    perform_codesign
 else
     pack
 fi

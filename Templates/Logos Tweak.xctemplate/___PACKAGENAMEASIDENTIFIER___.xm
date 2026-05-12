@@ -1,4 +1,12 @@
-// See http://iphonedevwiki.net/index.php/Logos
+//  See http://iphonedevwiki.net/index.php/Logos
+//  github: https://github.com/AloneMonkey/MonkeyDev
+//  github: https://github.com/kshipeng/MonkeyDev-Next
+//
+//  ___FILENAME___
+//  ___PACKAGENAME___
+//
+//  Created by ___FULLUSERNAME___ on ___DATE___.
+//
 
 #if TARGET_OS_SIMULATOR
 #error Do not support the simulator, please use the real iPhone Device.

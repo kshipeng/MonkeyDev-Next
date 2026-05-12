@@ -65,6 +65,8 @@
 		</dict>
 		<key>Logos/___PACKAGENAMEASIDENTIFIER___.xm</key>
 		<dict>
+			<key>SubstituteMacros</key>
+			<true/>
 			<key>Group</key>
 			<array>
 				<string>Logos</string>

@@ -1,4 +1,15 @@
-// See http://iphonedevwiki.net/index.php/Logos
+//  See http://iphonedevwiki.net/index.php/Logos
+//  github: https://github.com/AloneMonkey/MonkeyDev
+//  github: https://github.com/kshipeng/MonkeyDev-Next
+//
+//  ___FILENAME___
+//  ___PACKAGENAME___
+//
+//  Created by ___FULLUSERNAME___ on ___DATE___.
+//
+
+// 如果需要使用 libsubstrate.dylib 请注释掉该行，并设置 MONKEYDEV_ADD_SUBSTRATE = YES
+%config(generator=internal)
 
 #import <UIKit/UIKit.h>
 
@@ -41,10 +52,6 @@
 - (NSString*)getMyName
 {
 	%log;
-    
-    NSString* password = MSHookIvar<NSString*>(self,"_password");
-    
-    NSLog(@"password:%@", password);
     
     [%c(CustomViewController) classMethod];
     
